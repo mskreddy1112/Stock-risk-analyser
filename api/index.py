@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from data_fetcher import fetch_data
-from calculations import calculate_metrics
+from calculations import calculate_metrics, calculate_annualized_and_cumulative_returns
 from visualizations import create_visualization
 
 app = Flask(__name__)
@@ -17,8 +17,7 @@ def analyze():
 
     data = {}
     metrics = {}
-    
-    # Fetch data and calculate metrics for each ticker
+
     for ticker in tickers:
         try:
             ticker_data = fetch_data(ticker.strip(), start_date, end_date)
@@ -29,11 +28,13 @@ def analyze():
             data[ticker] = None
             metrics[ticker] = {"error": str(e)}
 
-    # Create visualization and get the path to the chart image
+    # Add your additional logic for cumulative and annualized returns
+    returns = calculate_annualized_and_cumulative_returns(tickers, start_date, end_date)
+
+    # Optionally, create visualizations
     chart_path = create_visualization(data, tickers)
 
-    # Render the results page with metrics and the chart image
-    return render_template('results.html', metrics=metrics, chart_path=chart_path)
+    return render_template('results.html', metrics=metrics, returns=returns, chart_path=chart_path)
 
 if __name__ == "__main__":
     app.run(debug=True)
