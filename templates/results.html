@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">
+    <title>Analysis Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+    <!-- Navigation -->
+    <nav class="bg-blue-600 p-4 text-white shadow-md flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="h-8 mr-2">
+            <span class="text-xl font-bold">Innovators United</span>
+        </div>
+        <div class="text-center">
+            <h1 class="text-2xl font-bold">Stock Analysis Results</h1>
+        </div>
+    </nav>
+
+    <!-- Results Content -->
+    <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg mt-8">
+        <h2 class="text-3xl font-semibold text-center mb-6">Stock Analysis Metrics</h2>
+        
+        <ul class="space-y-6">
+            {% for ticker, metric in metrics.items() %}
+                <li class="p-6 border border-gray-200 rounded-lg">
+                    <strong class="text-xl font-semibold">{{ ticker }}:</strong>
+                    {% if metric.error %}
+                        <p class="text-red-600 mt-2">Error: {{ metric.error }}</p>
+                    {% else %}
+                        <ul class="mt-4 space-y-2">
+                            <li><strong>Mean Return:</strong> {{ metric.mean_return }}</li>
+                            <li><strong>Risk:</strong> {{ metric.risk }}</li>
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Display the chart image -->
+        <div class="text-center mt-8">
+            <img src="{{ chart_path }}" alt="Stock Price Chart" class="w-full max-w-4xl mx-auto">
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="/" class="text-blue-600 hover:underline">Go Back</a>
+        </div>
+    </div>
+
+</body>
+</html>
